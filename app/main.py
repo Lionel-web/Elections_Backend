@@ -29,3 +29,6 @@ app.include_router(admin.router)
 @app.get("/")
 async def root():
     return {"message": "API Décompte Électoral en ligne"}
+
+from app.routes import test_db
+app.include_router(test_db.router)
