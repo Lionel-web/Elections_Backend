@@ -4,6 +4,7 @@ from app.core.db import db, pwd_context, get_db
 from datetime import datetime, timedelta
 from jose import jwt
 import os
+MAX_BCRYPT_BYTES = 72  # Maximum bytes for bcrypt
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
@@ -31,7 +32,7 @@ def login(data: LoginRequest):
     if user["role"] == "admin":
         if not data.password:
             raise HTTPException(status_code=400, detail="Mot de passe requis")
-        password = str(data.password)[:72]
+        password = data.password[:MAX_BCRYPT_BYTES]
         # Truncate to 72 bytes for bcrypt
         if not pwd_context.verify(password, user.get("hashed_password", "")):
             raise HTTPException(status_code=401, detail="Mot de passe incorrect")
