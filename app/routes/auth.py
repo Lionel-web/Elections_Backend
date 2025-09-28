@@ -31,9 +31,8 @@ def login(data: LoginRequest):
     if user["role"] == "admin":
         if not data.password:
             raise HTTPException(status_code=400, detail="Mot de passe requis")
-        
+        password = str(data.password)[:72]
         # Truncate to 72 bytes for bcrypt
-        password = data.password[:72]
         if not pwd_context.verify(password, user.get("hashed_password", "")):
             raise HTTPException(status_code=401, detail="Mot de passe incorrect")
 
